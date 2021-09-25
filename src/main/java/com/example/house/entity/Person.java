@@ -46,11 +46,11 @@ public class Person implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Person person = (Person) o;
-        return personId == person.personId && Objects.equals(firstName, person.firstName) && Objects.equals(lastName, person.lastName) && Objects.equals(username, person.username) && Objects.equals(userPassword, person.userPassword);
+        return personId == person.personId && Objects.equals(firstName, person.firstName) && Objects.equals(lastName, person.lastName) && Objects.equals(username, person.username) && Objects.equals(userPassword, person.userPassword) && Objects.equals(role, person.role) && Objects.equals(passwordsById, person.passwordsById);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(personId, firstName, lastName, username, userPassword);
+        return Objects.hash(personId, firstName, lastName, username, userPassword, role, passwordsById);
     }
 }
