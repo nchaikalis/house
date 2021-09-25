@@ -35,6 +35,9 @@ public class Person implements Serializable {
     @Column(name = "user_password")
     private String userPassword;
 
+    @Column(name = "user_role")
+    private String role;
+
     @OneToMany(mappedBy = "personId")
     private List<Asset> passwordsById;
 

@@ -3,10 +3,11 @@ create table person
     person_id     serial
         constraint person_pk
             primary key,
-    first_name    varchar(255) not null,
-    last_name     varchar(255) not null,
-    username      varchar(255) not null,
-    user_password varchar(255) not null
+    first_name    varchar(255)                                     not null,
+    last_name     varchar(255)                                     not null,
+    username      varchar(255)                                     not null,
+    user_password varchar(255)                                     not null,
+    user_role     varchar(255) default 'viewer'::character varying not null
 );
 
 alter table person
