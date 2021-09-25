@@ -4,16 +4,23 @@ import com.example.house.entity.Asset;
 import com.example.house.entity.Person;
 import com.example.house.exception.AssetSaveException;
 import com.example.house.exception.PersonSearchException;
+import com.example.house.exception.PersonValidationException;
 import com.example.house.repository.AssetRepository;
 import com.example.house.repository.PersonRepository;
+import com.example.house.security.FindUsernameFromHeader;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.tomcat.util.json.JSONParser;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional
@@ -49,6 +56,12 @@ public class AssetServiceImpl implements AssetService{
         } catch (AssetSaveException e) {
             throw new AssetSaveException("Asset can not be saved" + e);
         }
+    }
+
+    @Override
+    public String getToken(Map<String, String> header) {
+        FindUsernameFromHeader findUsernameFromHeader = new FindUsernameFromHeader(header);
+        return findUsernameFromHeader.retrieveUsername();
     }
 
     @Override

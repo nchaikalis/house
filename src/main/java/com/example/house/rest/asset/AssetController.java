@@ -4,14 +4,15 @@ import com.example.house.entity.Asset;
 import com.example.house.exception.AssetSaveException;
 import com.example.house.exception.AssetSearchException;
 import com.example.house.exception.PersonSearchException;
+import com.example.house.exception.PersonValidationException;
+import com.example.house.security.JwtTokenProvider;
 import com.example.house.service.asset.AssetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/asset")
@@ -26,13 +27,18 @@ public class AssetController {
             assetService.save(asset);
             return new ResponseEntity<>(true, HttpStatus.CREATED);
         }
-        catch (AssetSaveException ex) {
+        catch (AssetSaveException | PersonSearchException | AssetSearchException ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        catch (AssetSearchException ex) {
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
+    @GetMapping
+    public ResponseEntity<Object> getPersonAssets(@RequestHeader Map<String, String> header) {
+        try{
+            String username = assetService.getToken(header);
+            return new ResponseEntity<>(username, HttpStatus.CREATED);
         }
-        catch (PersonSearchException ex) {
+        catch (PersonValidationException ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
