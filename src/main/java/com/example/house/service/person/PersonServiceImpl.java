@@ -47,7 +47,7 @@ public class PersonServiceImpl implements PersonService {
 
         try {
             Person person = findByUsername(username);
-            LogonPersonDto dto = PersonMapper.INSTANCE.getDto(person);
+            LogonPersonDto dto = PersonMapper.INSTANCE.getLogonDto(person);
             dto.setToken(getToken(username, password, dto.getRole()));
             return dto;
         } catch (Exception e) {
@@ -57,6 +57,8 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public String signup(Person dto) {
+        // getEntityFromPersonRegisterDto
+
         return null;
     }
 
@@ -70,13 +72,17 @@ public class PersonServiceImpl implements PersonService {
     }
 
     private void validateString(String value, String errorMessage) {
-        if(errorMessage.isEmpty()) {
+        if(errorMessage == null || errorMessage.isEmpty()) {
             errorMessage = "validateString function is throwing an error without a providing error message";
         }
 
         if(value == null || value.isEmpty()) {
             throw new PersonValidationException(errorMessage);
         }
+    }
+
+    private boolean validatePasswords(String pass1, String pass2){
+        return pass1.equals(pass2);
     }
 
     /**
