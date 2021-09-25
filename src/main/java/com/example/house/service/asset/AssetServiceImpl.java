@@ -33,9 +33,8 @@ public class AssetServiceImpl implements AssetService{
     private PersonRepository personRepository;
 
     @Override
-    public List<Asset> findAllByPersonId(int person_id) {
-        Optional<List<Asset>> assetList = Optional.ofNullable(assetRepository.findAllByPersonId(person_id));
-        return assetList.orElse(new ArrayList<>());
+    public List<Asset> findAssetsByPersonId(int person_id) {
+        return assetRepository.findAssetsByPersonId(person_id);
     }
 
     @Override
@@ -50,18 +49,15 @@ public class AssetServiceImpl implements AssetService{
     }
 
     @Override
-    public String getUsernameFromToken(Map<String, String> header) {
+    public Person getPersonFromHeader(Map<String, String> header) {
         FindUsernameFromHeader findUsernameFromHeader = new FindUsernameFromHeader(header);
-        return findUsernameFromHeader.retrieveUsername();
+        String username = findUsernameFromHeader.retrieveUsername();
+        return findPersonFromUsername(username);
     }
 
     @Override
     public boolean deleteByAssetId(int asset_id) {
         return false;
-    }
-
-    private Asset findByAssetId(int id) {
-        return assetRepository.findByAssetId(id);
     }
 
     private void validateUser(Asset asset) {
@@ -121,5 +117,13 @@ public class AssetServiceImpl implements AssetService{
         else if(asset.getPrice() < assetPriceMin || asset.getPrice() > assetPriceMax) {
             throw new AssetSaveException("Wrong price. Accepted values are from: " + assetPriceMin + " to: " + assetPriceMax);
         }
+    }
+
+    private Person findPersonFromUsername(String username) {
+        Person person = personRepository.findByUsername(username);
+        if(person == null) {
+            throw new PersonSearchException("The person ID is not exists.");
+        }
+        return person;
     }
 }
