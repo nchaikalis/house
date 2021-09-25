@@ -2,10 +2,7 @@ package com.example.house.rest.asset;
 
 import com.example.house.entity.Asset;
 import com.example.house.entity.Person;
-import com.example.house.exception.AssetSaveException;
-import com.example.house.exception.AssetSearchException;
-import com.example.house.exception.PersonSearchException;
-import com.example.house.exception.PersonValidationException;
+import com.example.house.exception.*;
 import com.example.house.service.asset.AssetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -46,8 +43,15 @@ public class AssetController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public boolean deleteUserByID(@RequestHeader Map<String, String> header, @PathVariable int id){
-        Person person = assetService.getPersonFromHeader(header);
-        return assetService.deleteByAssetId(person, id);
+    public ResponseEntity<Object> deleteUserByID(@RequestHeader Map<String, String> header, @PathVariable int id){
+         try{
+            Person person = assetService.getPersonFromHeader(header);
+            assetService.deleteByAssetId(person, id);
+            List<Asset> assetList = assetService.findAssetsByPersonId(person.getPersonId());
+            return new ResponseEntity<>(assetList, HttpStatus.OK);
+        }
+        catch (DeleteAssetException | AssetSearchException ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 }

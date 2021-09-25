@@ -4,6 +4,7 @@ import com.example.house.entity.Asset;
 import com.example.house.entity.Person;
 import com.example.house.exception.AssetSaveException;
 import com.example.house.exception.AssetSearchException;
+import com.example.house.exception.DeleteAssetException;
 import com.example.house.exception.PersonSearchException;
 import com.example.house.repository.AssetRepository;
 import com.example.house.repository.PersonRepository;
@@ -62,7 +63,14 @@ public class AssetServiceImpl implements AssetService{
         if(personAssets.isEmpty()) {
             throw new AssetSearchException("The user " + person.getUsername() + " has no assets");
         }
-        return personAssets.map(list -> list.stream().anyMatch(asset -> String.valueOf(asset.getAssetId()).equals(String.valueOf(asset_id)))).orElse(Boolean.FALSE);
+        checkIfAssetBelongsToPerson(personAssets, asset_id);
+        try{
+            assetRepository.deleteByAssetId(asset_id);
+            return true;
+        } catch (Exception e) {
+            throw new DeleteAssetException("Something went wrong the asset can not be deleted.\nError:\n" + e);
+        }
+
     }
 
     private void validateUser(Asset asset) {
@@ -130,5 +138,13 @@ public class AssetServiceImpl implements AssetService{
             throw new PersonSearchException("The person ID is not exists.");
         }
         return person;
+    }
+
+    private void checkIfAssetBelongsToPerson(Optional<List<Asset>> personAssets, int asset_id) {
+        // we have to also cast the int to String in order to manage to return a boolean.
+        boolean itBelongs = personAssets.map(list -> list.stream().anyMatch(asset -> String.valueOf(asset.getAssetId()).equals(String.valueOf(asset_id)))).orElse(Boolean.FALSE);
+        if(!itBelongs){
+            throw new AssetSearchException("No matching assets belong to the current user.");
+        }
     }
 }
