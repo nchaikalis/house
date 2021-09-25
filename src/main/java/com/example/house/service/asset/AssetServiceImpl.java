@@ -3,7 +3,6 @@ package com.example.house.service.asset;
 import com.example.house.entity.Asset;
 import com.example.house.entity.Person;
 import com.example.house.exception.AssetSaveException;
-import com.example.house.exception.AssetSearchException;
 import com.example.house.exception.PersonSearchException;
 import com.example.house.repository.AssetRepository;
 import com.example.house.repository.PersonRepository;
