@@ -5,6 +5,9 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -12,26 +15,28 @@ import java.util.Objects;
 @ToString
 @Getter
 @Setter
-public class Person {
+public class Person implements Serializable {
     @Id
+    @NotNull
+    @Basic(optional = false)
     @Column(name = "person_id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int personId;
 
-    @Basic
     @Column(name = "first_name")
     private String firstName;
 
-    @Basic
     @Column(name = "last_name")
     private String lastName;
 
-    @Basic
     @Column(name = "username")
     private String username;
 
-    @Basic
     @Column(name = "user_password")
     private String userPassword;
+
+    @OneToMany(mappedBy = "personId")
+    private List<Asset> passwordsById;
 
     @Override
     public boolean equals(Object o) {

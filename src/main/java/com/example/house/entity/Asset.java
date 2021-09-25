@@ -1,10 +1,12 @@
 package com.example.house.entity;
 
+import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
@@ -12,34 +14,29 @@ import java.util.Objects;
 @ToString
 @Getter
 @Setter
-public class Asset {
+public class Asset implements Serializable {
     @Id
+    @NotNull
+    @Basic(optional = false)
     @Column(name = "asset_id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int assetId;
 
-    @Basic
     @Column(name = "area")
     private String area;
 
-    @Basic
     @Column(name = "price")
     private int price;
 
-    @Basic
     @Column(name = "availability")
     private String availability;
 
-    @Basic
     @Column(name = "square_meter")
     private int squareMeter;
 
-    @Basic
-    @Column(name = "person_id")
-    private Integer personId;
-
-    @ManyToOne
-    @JoinColumn(name = "person_id", referencedColumnName = "person_id")
-    private Person personByPersonId;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "person_id", referencedColumnName = "person_id", nullable = false)
+    private Person personId;
 
     @Override
     public boolean equals(Object o) {
