@@ -22,9 +22,16 @@ public class PersonController {
 
     @Autowired
     PersonService service;
+
     @PostMapping("/signin")
-    public LogonPersonDto signin(@RequestBody PersonAttemptToLoginDto dto) {
-        return service.signin(dto.getUsername(), dto.getUserPassword());
+    public ResponseEntity<Object> signin(@RequestBody PersonAttemptToLoginDto dto) {
+        try{
+            LogonPersonDto logonPersonDto = service.signin(dto.getUsername(), dto.getUserPassword());
+            return new ResponseEntity<>(logonPersonDto, HttpStatus.OK);
+        }
+        catch (PersonValidationException ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping("/signup")

@@ -41,17 +41,14 @@ public class PersonServiceImpl implements PersonService {
         validateString(username, "Username can not be empty.");
         validateString(password, "Password can not be empty.");
 
-        try {
-            Person person = findByUsername(username);
-            if(person == null) {
-                throw new PersonValidationException("The username " + username + " doesn't exists.");
-            }
-            LogonPersonDto dto = PersonMapper.INSTANCE.getLogonDto(person);
-            dto.setToken(getToken(username, password, dto.getRole()));
-            return dto;
-        } catch (Exception e) {
-            throw new PersonValidationException("Invalid username/password supplied");
+
+        Person person = findByUsername(username);
+        if(person == null) {
+            throw new PersonValidationException("The username " + username + " doesn't exists.");
         }
+        LogonPersonDto dto = PersonMapper.INSTANCE.getLogonDto(person);
+        dto.setToken(getToken(username, password, dto.getRole()));
+        return dto;
     }
 
     @Override
