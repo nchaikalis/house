@@ -1,6 +1,7 @@
 package com.example.house.service.person;
 
 import com.example.house.dto.LogonPersonDto;
+import com.example.house.dto.PersonRegisterDto;
 import com.example.house.dto.mapper.PersonMapper;
 import com.example.house.entity.Person;
 import com.example.house.exception.PersonValidationException;
@@ -36,17 +37,15 @@ public class PersonServiceImpl implements PersonService {
     private AuthenticationManager authenticationManager;
 
     @Override
-    public void save(Person person) {
-
-    }
-
-    @Override
     public LogonPersonDto signin(String username, String password) {
         validateString(username, "Username can not be empty.");
         validateString(password, "Password can not be empty.");
 
         try {
             Person person = findByUsername(username);
+            if(person == null) {
+                throw new PersonValidationException("The username " + username + " doesn't exists.");
+            }
             LogonPersonDto dto = PersonMapper.INSTANCE.getLogonDto(person);
             dto.setToken(getToken(username, password, dto.getRole()));
             return dto;
@@ -56,19 +55,33 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public String signup(Person dto) {
-        // getEntityFromPersonRegisterDto
+    public String signup(PersonRegisterDto dto) {
+        Person person = PersonMapper.INSTANCE.getEntityFromPersonRegisterDto(dto);
 
-        return null;
+        if(findByUsername(person.getUsername()) != null) {
+            throw new PersonValidationException("The username already exists.");
+        }
+
+        validateString(dto.getUsername(), "Username can not be empty.");
+        validateString(dto.getUserPassword(), "Password can not be empty.");
+        validateString(dto.getUserPasswordConfirmation(), "Password confirmation can not be empty.");
+        validateString(dto.getFirstName(), "First name can not be empty.");
+        validateString(dto.getLastName(), "Last name can not be empty.");
+        validateString(dto.getRole(), "Role can not be empty.");
+
+        if(!(validatePasswords(dto.getUserPassword(), dto.getUserPasswordConfirmation()))){
+            throw new PersonValidationException("The passwords are not the same.");
+        }
+
+        person.setUserPassword(passwordEncoder.encode(dto.getUserPassword()));
+        personRepository.save(person);
+
+        return jwtTokenProvider.createToken(person.getUsername(), person.getRole());
     }
 
     private Person findByUsername(String username) {
         validateString(username, "Username can not be empty.");
-        Person person = personRepository.findByUsername(username);
-        if(person == null) {
-            throw new PersonValidationException("The username " + username + " doesn't exists.");
-        }
-        return person;
+        return personRepository.findByUsername(username);
     }
 
     private void validateString(String value, String errorMessage) {
@@ -87,8 +100,8 @@ public class PersonServiceImpl implements PersonService {
 
     /**
      * Given the username, password and roles generates a JWT token.
-     * @param username
-     * @param password
+     * @param username username of the Person
+     * @param password password of the Person
      * @param role i.e ADMIN, VIEWER, EDITOR
      * @return the generated token
      */
