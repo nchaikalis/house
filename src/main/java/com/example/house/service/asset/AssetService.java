@@ -10,5 +10,5 @@ public interface AssetService {
     List<Asset> findAssetsByPersonId(int person_id);
     void save(Asset asset);
     Person getPersonFromHeader(Map<String, String> header);
-    boolean deleteByAssetId(int asset_id);
+    boolean deleteByAssetId(Person person, int asset_id);
 }

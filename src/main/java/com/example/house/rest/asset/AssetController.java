@@ -44,4 +44,10 @@ public class AssetController {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @DeleteMapping(value = "/{id}")
+    public boolean deleteUserByID(@RequestHeader Map<String, String> header, @PathVariable int id){
+        Person person = assetService.getPersonFromHeader(header);
+        return assetService.deleteByAssetId(person, id);
+    }
 }

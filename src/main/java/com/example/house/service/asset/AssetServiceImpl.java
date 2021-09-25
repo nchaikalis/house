@@ -3,6 +3,7 @@ package com.example.house.service.asset;
 import com.example.house.entity.Asset;
 import com.example.house.entity.Person;
 import com.example.house.exception.AssetSaveException;
+import com.example.house.exception.AssetSearchException;
 import com.example.house.exception.PersonSearchException;
 import com.example.house.repository.AssetRepository;
 import com.example.house.repository.PersonRepository;
@@ -56,8 +57,12 @@ public class AssetServiceImpl implements AssetService{
     }
 
     @Override
-    public boolean deleteByAssetId(int asset_id) {
-        return false;
+    public boolean deleteByAssetId(Person person, int asset_id) {
+        Optional<List<Asset>> personAssets = Optional.ofNullable(findAssetsByPersonId(person.getPersonId()));
+        if(personAssets.isEmpty()) {
+            throw new AssetSearchException("The user " + person.getUsername() + " has no assets");
+        }
+        return personAssets.map(list -> list.stream().anyMatch(asset -> String.valueOf(asset.getAssetId()).equals(String.valueOf(asset_id)))).orElse(Boolean.FALSE);
     }
 
     private void validateUser(Asset asset) {
