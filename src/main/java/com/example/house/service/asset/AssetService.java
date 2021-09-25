@@ -8,6 +8,6 @@ import java.util.Map;
 public interface AssetService {
     List<Asset> findAllByPersonId(int person_id);
     void save(Asset asset);
-    String getToken( Map<String, String> header);
+    String getUsernameFromToken( Map<String, String> header);
     boolean deleteByAssetId(int asset_id);
 }
