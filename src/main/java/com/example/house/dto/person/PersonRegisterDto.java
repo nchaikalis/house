@@ -1,4 +1,4 @@
-package com.example.house.dto;
+package com.example.house.dto.person;
 
 import lombok.Getter;
 import lombok.Setter;

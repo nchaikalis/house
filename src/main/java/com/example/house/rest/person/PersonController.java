@@ -1,8 +1,8 @@
 package com.example.house.rest.person;
 
-import com.example.house.dto.LogonPersonDto;
-import com.example.house.dto.PersonAttemptToLoginDto;
-import com.example.house.dto.PersonRegisterDto;
+import com.example.house.dto.person.LogonPersonDto;
+import com.example.house.dto.person.PersonAttemptToLoginDto;
+import com.example.house.dto.person.PersonRegisterDto;
 import com.example.house.exception.PersonValidationException;
 import com.example.house.service.person.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
