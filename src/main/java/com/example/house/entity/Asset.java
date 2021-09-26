@@ -1,9 +1,8 @@
 package com.example.house.entity;
 
 import javax.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -14,6 +13,8 @@ import java.util.Objects;
 @ToString
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Asset implements Serializable {
     @Id
     @NotNull
