@@ -1,5 +1,7 @@
 package com.example.house.service.asset;
 
+import com.example.house.dto.asset.PersonAssetDto;
+import com.example.house.dto.mapper.AssetMapper;
 import com.example.house.entity.Asset;
 import com.example.house.entity.Person;
 import com.example.house.exception.AssetSaveException;
@@ -35,8 +37,9 @@ public class AssetServiceImpl implements AssetService{
     private PersonRepository personRepository;
 
     @Override
-    public List<Asset> findAssetsByPersonId(int person_id) {
-        return assetRepository.findAssetsByPersonId(person_id);
+    public List<PersonAssetDto> findAssetsByPersonId(int person_id) {
+        List<Asset> assetList = assetRepository.findAssetsByPersonId(person_id);
+        return TransformAssetListToDtoList(assetList);
     }
 
     @Override
@@ -59,11 +62,11 @@ public class AssetServiceImpl implements AssetService{
 
     @Override
     public boolean deleteByAssetId(Person person, int asset_id) {
-        Optional<List<Asset>> personAssets = Optional.ofNullable(findAssetsByPersonId(person.getPersonId()));
-        if(personAssets.isEmpty()) {
+        Optional<List<PersonAssetDto>> personAssetList = Optional.ofNullable(findAssetsByPersonId(person.getPersonId()));
+        if(personAssetList.isEmpty()) {
             throw new AssetSearchException("The user " + person.getUsername() + " has no assets");
         }
-        checkIfAssetBelongsToPerson(personAssets, asset_id);
+        checkIfAssetBelongsToPerson(personAssetList, asset_id);
         try{
             assetRepository.deleteByAssetId(asset_id);
             return true;
@@ -140,11 +143,19 @@ public class AssetServiceImpl implements AssetService{
         return person;
     }
 
-    private void checkIfAssetBelongsToPerson(Optional<List<Asset>> personAssets, int asset_id) {
+    private void checkIfAssetBelongsToPerson(Optional<List<PersonAssetDto>> personAssets, int asset_id) {
         // we have to also cast the int to String in order to manage to return a boolean.
         boolean itBelongs = personAssets.map(list -> list.stream().anyMatch(asset -> String.valueOf(asset.getAssetId()).equals(String.valueOf(asset_id)))).orElse(Boolean.FALSE);
         if(!itBelongs){
             throw new AssetSearchException("No matching assets belong to the current user.");
         }
+    }
+
+    private List<PersonAssetDto> TransformAssetListToDtoList(List<Asset> assetList) {
+        List<PersonAssetDto> personAssetDtoList = AssetMapper.INSTANCE.getPersonAssetListDto(assetList);
+        if(personAssetDtoList == null || personAssetDtoList.isEmpty()) {
+            throw new AssetSearchException("No matching assets belong to the current user.");
+        }
+        return personAssetDtoList;
     }
 }

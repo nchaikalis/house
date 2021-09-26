@@ -1,5 +1,6 @@
 package com.example.house.rest.asset;
 
+import com.example.house.dto.asset.PersonAssetDto;
 import com.example.house.entity.Asset;
 import com.example.house.entity.Person;
 import com.example.house.exception.*;
@@ -34,7 +35,7 @@ public class AssetController {
     public ResponseEntity<Object> getPersonAssets(@RequestHeader Map<String, String> header) {
         try{
             Person person = assetService.getPersonFromHeader(header);
-            List<Asset> assetList = assetService.findAssetsByPersonId(person.getPersonId());
+            List<PersonAssetDto> assetList = assetService.findAssetsByPersonId(person.getPersonId());
             return new ResponseEntity<>(assetList, HttpStatus.CREATED);
         }
         catch (PersonValidationException ex) {
@@ -47,7 +48,7 @@ public class AssetController {
          try{
             Person person = assetService.getPersonFromHeader(header);
             assetService.deleteByAssetId(person, id);
-            List<Asset> assetList = assetService.findAssetsByPersonId(person.getPersonId());
+            List<PersonAssetDto> assetList = assetService.findAssetsByPersonId(person.getPersonId());
             return new ResponseEntity<>(assetList, HttpStatus.OK);
         }
         catch (DeleteAssetException | AssetSearchException ex) {
