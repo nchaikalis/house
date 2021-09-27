@@ -24,9 +24,10 @@ public class AssetController {
     private AssetService assetService;
 
     @PostMapping
-    public ResponseEntity<Object> save(@RequestBody Asset asset) {
+    public ResponseEntity<Object> save(@RequestHeader Map<String, String> header, @RequestBody Asset asset) {
         try{
-            assetService.save(asset);
+            Person person = assetService.getPersonFromHeader(header);
+            assetService.save(asset, person);
             return new ResponseEntity<>(true, HttpStatus.CREATED);
         }
         catch (AssetException | PersonException ex) {

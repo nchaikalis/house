@@ -9,7 +9,7 @@ import java.util.Map;
 
 public interface AssetService {
     List<PersonAssetDto> findAssetsByPersonId(int person_id);
-    void save(Asset asset);
+    void save(Asset asset, Person person);
     Person getPersonFromHeader(Map<String, String> header);
     boolean deleteByAssetId(Person person, int asset_id);
 }

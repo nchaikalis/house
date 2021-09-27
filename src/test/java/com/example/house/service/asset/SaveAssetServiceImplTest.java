@@ -13,7 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 class SaveAssetServiceImplTest {
-    private final int person_id = 44; // set a correct ID from the DB in order for all tests to work
+    private final int person_id = 187; // set a correct ID from the DB in order for all tests to work
     private Person correctPersonId = new Person();
 
     @Autowired
@@ -32,15 +32,16 @@ class SaveAssetServiceImplTest {
     @Test
     public void SaveTestNull() {
         Assertions.assertThrows(NullPointerException.class, () -> {
-            assetService.save(null);
+            assetService.save(null, null);
         });
     }
 
     @Test
     public void SaveTestZero() {
         Asset asset = new Asset();
+        Person person = new Person();
         Assertions.assertThrows(PersonSearchException.class, () -> {
-            assetService.save(asset);
+            assetService.save(asset, person);
         });
     }
 
@@ -48,7 +49,7 @@ class SaveAssetServiceImplTest {
     public void SaveTestWrongPersonId() {
         Asset asset = new Asset(1, "Αθήνα", 10000, "Πώληση", 40, new Person());
         Assertions.assertThrows(PersonSearchException.class, () -> {
-            assetService.save(asset);
+            assetService.save(asset, new Person());
         });
     }
 
@@ -56,7 +57,7 @@ class SaveAssetServiceImplTest {
     public void SaveTestWrongSquareMeterMin() {
         Asset asset = new Asset(1, "Αθήνα", 10000, "Πώληση", 19, correctPersonId);
         Assertions.assertThrows(AssetSaveException.class, () -> {
-            assetService.save(asset);
+            assetService.save(asset, correctPersonId);
         });
     }
 
@@ -64,7 +65,7 @@ class SaveAssetServiceImplTest {
     public void SaveTestWrongSquareMeterMax() {
         Asset asset = new Asset(1, "Αθήνα", 10000, "Πώληση", 1001, correctPersonId);
         Assertions.assertThrows(AssetSaveException.class, () -> {
-            assetService.save(asset);
+            assetService.save(asset, correctPersonId);
         });
     }
 
@@ -72,7 +73,7 @@ class SaveAssetServiceImplTest {
     public void SaveTestWrongAvailability() {
         Asset assetError = new Asset(1, "Αθήνα", 10000, "Χάρισμα", 500, correctPersonId);
         Assertions.assertThrows(AssetSaveException.class, () -> {
-            assetService.save(assetError);
+            assetService.save(assetError, correctPersonId);
         });
     }
 
@@ -80,7 +81,7 @@ class SaveAssetServiceImplTest {
     public void SaveTestWrongPriceMin() {
         Asset asset = new Asset(1, "Αθήνα", 49, "Πώληση", 500, correctPersonId);
         Assertions.assertThrows(AssetSaveException.class, () -> {
-            assetService.save(asset);
+            assetService.save(asset, correctPersonId);
         });
     }
 
@@ -88,7 +89,7 @@ class SaveAssetServiceImplTest {
     public void SaveTestWrongPriceMax() {
         Asset asset = new Asset(1, "Αθήνα", 5000001, "Πώληση", 500, correctPersonId);
         Assertions.assertThrows(AssetSaveException.class, () -> {
-            assetService.save(asset);
+            assetService.save(asset, correctPersonId);
         });
     }
 
@@ -96,7 +97,7 @@ class SaveAssetServiceImplTest {
     public void SaveTestWrongWrongCity() {
         Asset asset = new Asset(1, "Ζάκυνθος", 5000, "Πώληση", 500, correctPersonId);
         Assertions.assertThrows(AssetSaveException.class, () -> {
-            assetService.save(asset);
+            assetService.save(asset, correctPersonId);
         });
     }
 
@@ -104,7 +105,7 @@ class SaveAssetServiceImplTest {
     public void SaveTestCorrectCity_1() {
         Asset asset = new Asset(1, "Αθήνα", 5000, "Πώληση", 500, correctPersonId);
         Assertions.assertDoesNotThrow(() -> {
-            assetService.save(asset);
+            assetService.save(asset, correctPersonId);
         });
     }
 
@@ -112,7 +113,7 @@ class SaveAssetServiceImplTest {
     public void SaveTestCorrectCity_2() {
         Asset asset = new Asset(1, "Θεσσαλονίκη", 5000, "Πώληση", 500, correctPersonId);
         Assertions.assertDoesNotThrow(() -> {
-            assetService.save(asset);
+            assetService.save(asset, correctPersonId);
         });
     }
 
@@ -120,7 +121,7 @@ class SaveAssetServiceImplTest {
     public void SaveTestCorrectCity_3() {
         Asset asset = new Asset(1, "Πάτρα", 5000, "Πώληση", 500, correctPersonId);
         Assertions.assertDoesNotThrow(() -> {
-            assetService.save(asset);
+            assetService.save(asset, correctPersonId);
         });
     }
 
@@ -128,7 +129,7 @@ class SaveAssetServiceImplTest {
     public void SaveTestCorrectCity_4() {
         Asset asset = new Asset(1, "Ηράκλειο", 5000, "Πώληση", 500, correctPersonId);
         Assertions.assertDoesNotThrow(() -> {
-            assetService.save(asset);
+            assetService.save(asset, correctPersonId);
         });
     }
 
@@ -136,7 +137,7 @@ class SaveAssetServiceImplTest {
     public void SaveTestCorrectAvailability_1() {
         Asset asset = new Asset(1, "Αθήνα", 5000, "Πώληση", 500, correctPersonId);
         Assertions.assertDoesNotThrow(() -> {
-            assetService.save(asset);
+            assetService.save(asset, correctPersonId);
         });
     }
 
@@ -144,7 +145,7 @@ class SaveAssetServiceImplTest {
     public void SaveTestCorrectAvailability_2() {
         Asset asset = new Asset(1, "Αθήνα", 5000, "Ενοικίαση", 500, correctPersonId);
         Assertions.assertDoesNotThrow(() -> {
-            assetService.save(asset);
+            assetService.save(asset, correctPersonId);
         });
     }
 
@@ -152,7 +153,7 @@ class SaveAssetServiceImplTest {
     public void SaveTestMissingValues() {
         Asset asset = new Asset(1, null, 5000001, "Πώληση", 500, correctPersonId);
         Assertions.assertThrows(AssetSaveException.class, () -> {
-            assetService.save(asset);
+            assetService.save(asset, correctPersonId);
         });
     }
 

@@ -8,6 +8,7 @@ import com.example.house.exception.asset.AssetSaveException;
 import com.example.house.exception.asset.AssetSearchException;
 import com.example.house.exception.asset.DeleteAssetException;
 import com.example.house.exception.person.PersonSearchException;
+import com.example.house.exception.person.PersonValidationException;
 import com.example.house.repository.AssetRepository;
 import com.example.house.repository.PersonRepository;
 import com.example.house.security.FindUsernameFromHeader;
@@ -43,8 +44,8 @@ public class AssetServiceImpl implements AssetService{
     }
 
     @Override
-    public void save(Asset asset) {
-        validateUser(asset);
+    public void save(Asset asset, Person person) {
+        validateUser(asset, person);
         validateAnAsset(asset);
         try {
             assetRepository.save(asset);
@@ -76,14 +77,22 @@ public class AssetServiceImpl implements AssetService{
 
     }
 
-    private void validateUser(Asset asset) {
+    private void validateUser(Asset asset, Person givenPerson) {
         if(asset.getPersonId() == null) {
             throw new PersonSearchException("The person ID required.");
+        }
+
+        if(givenPerson == null) {
+            throw new PersonSearchException("The person ID from the header is wrong.");
         }
 
         Person person = personRepository.findByPersonId(asset.getPersonId().getPersonId());
         if(person == null) {
             throw new PersonSearchException("The person ID is not exists.");
+        }
+
+        if(person.getPersonId() != givenPerson.getPersonId()) {
+            throw new PersonValidationException("Your ID is not matching with the ID that you are trying to use.");
         }
         asset.setPersonId(person);
     }
