@@ -1,6 +1,6 @@
-package com.example.house.exception;
+package com.example.house.exception.person;
 
-public class PersonValidationException extends RuntimeException {
+public class PersonValidationException extends PersonException {
     private String message;
 
     public PersonValidationException() {}

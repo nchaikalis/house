@@ -4,11 +4,12 @@ import com.example.house.dto.person.LogonPersonDto;
 import com.example.house.dto.person.PersonRegisterDto;
 import com.example.house.dto.mapper.PersonMapper;
 import com.example.house.entity.Person;
-import com.example.house.exception.PersonValidationException;
+import com.example.house.exception.person.PersonValidationException;
 import com.example.house.repository.PersonRepository;
 import com.example.house.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -46,9 +47,14 @@ public class PersonServiceImpl implements PersonService {
         if(person == null) {
             throw new PersonValidationException("The username " + username + " doesn't exists.");
         }
-        LogonPersonDto dto = PersonMapper.INSTANCE.getLogonDto(person);
-        dto.setToken(getToken(username, password, dto.getRole()));
-        return dto;
+        try{
+            LogonPersonDto dto = PersonMapper.INSTANCE.getLogonDto(person);
+            dto.setToken(getToken(username, password, dto.getRole()));
+            return dto;
+        } catch (BadCredentialsException ex) {
+            throw new PersonValidationException("Wrong password");
+        }
+
     }
 
     @Override

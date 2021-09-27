@@ -1,6 +1,6 @@
 package com.example.house.security;
 
-import com.example.house.exception.PersonValidationException;
+import com.example.house.exception.person.PersonValidationException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

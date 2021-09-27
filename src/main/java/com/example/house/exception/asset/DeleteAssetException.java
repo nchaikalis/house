@@ -1,6 +1,6 @@
-package com.example.house.exception;
+package com.example.house.exception.asset;
 
-public class DeleteAssetException extends RuntimeException {
+public class DeleteAssetException extends AssetException {
     private String message;
 
     public DeleteAssetException() {}

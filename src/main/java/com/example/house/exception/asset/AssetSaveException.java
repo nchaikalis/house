@@ -1,6 +1,6 @@
-package com.example.house.exception;
+package com.example.house.exception.asset;
 
-public class AssetSaveException extends RuntimeException {
+public class AssetSaveException extends AssetException {
     private String message;
 
     public AssetSaveException() {}

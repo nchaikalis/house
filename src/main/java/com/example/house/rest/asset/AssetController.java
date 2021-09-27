@@ -3,7 +3,10 @@ package com.example.house.rest.asset;
 import com.example.house.dto.asset.PersonAssetDto;
 import com.example.house.entity.Asset;
 import com.example.house.entity.Person;
-import com.example.house.exception.*;
+import com.example.house.exception.asset.AssetException;
+import com.example.house.exception.person.PersonException;
+import com.example.house.exception.person.PersonSearchException;
+import com.example.house.exception.person.PersonValidationException;
 import com.example.house.service.asset.AssetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,7 +29,7 @@ public class AssetController {
             assetService.save(asset);
             return new ResponseEntity<>(true, HttpStatus.CREATED);
         }
-        catch (AssetSaveException | PersonSearchException | AssetSearchException ex) {
+        catch (AssetException | PersonException ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -38,7 +41,7 @@ public class AssetController {
             List<PersonAssetDto> assetList = assetService.findAssetsByPersonId(person.getPersonId());
             return new ResponseEntity<>(assetList, HttpStatus.CREATED);
         }
-        catch (PersonValidationException ex) {
+        catch (PersonException ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -51,7 +54,7 @@ public class AssetController {
             List<PersonAssetDto> assetList = assetService.findAssetsByPersonId(person.getPersonId());
             return new ResponseEntity<>(assetList, HttpStatus.OK);
         }
-        catch (DeleteAssetException | AssetSearchException ex) {
+        catch (AssetException ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }

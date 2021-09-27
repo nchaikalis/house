@@ -1,6 +1,6 @@
-package com.example.house.exception;
+package com.example.house.exception.person;
 
-public class PersonSearchException extends RuntimeException {
+public class PersonSearchException extends PersonException {
     private String message;
 
     public PersonSearchException() {}

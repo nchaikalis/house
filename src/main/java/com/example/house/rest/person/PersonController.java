@@ -3,7 +3,8 @@ package com.example.house.rest.person;
 import com.example.house.dto.person.LogonPersonDto;
 import com.example.house.dto.person.PersonAttemptToLoginDto;
 import com.example.house.dto.person.PersonRegisterDto;
-import com.example.house.exception.PersonValidationException;
+import com.example.house.exception.person.PersonException;
+import com.example.house.exception.person.PersonValidationException;
 import com.example.house.service.person.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,7 +27,7 @@ public class PersonController {
             LogonPersonDto logonPersonDto = service.signin(dto.getUsername(), dto.getUserPassword());
             return new ResponseEntity<>(logonPersonDto, HttpStatus.OK);
         }
-        catch (PersonValidationException ex) {
+        catch (PersonException ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -37,7 +38,7 @@ public class PersonController {
             service.signup(user);
             return new ResponseEntity<>(true, HttpStatus.CREATED);
         }
-        catch (PersonValidationException ex) {
+        catch (PersonException ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }

@@ -2,8 +2,8 @@ package com.example.house.service.asset;
 
 import com.example.house.entity.Asset;
 import com.example.house.entity.Person;
-import com.example.house.exception.AssetSaveException;
-import com.example.house.exception.PersonSearchException;
+import com.example.house.exception.asset.AssetSaveException;
+import com.example.house.exception.person.PersonSearchException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
