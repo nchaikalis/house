@@ -22,18 +22,23 @@ public class Person implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int personId;
 
+    @NotNull
     @Column(name = "first_name")
     private String firstName;
 
+    @NotNull
     @Column(name = "last_name")
     private String lastName;
 
+    @NotNull
     @Column(name = "username")
     private String username;
 
+    @NotNull
     @Column(name = "user_password")
     private String userPassword;
 
+    @NotNull
     @Column(name = "user_role")
     private String role;
 

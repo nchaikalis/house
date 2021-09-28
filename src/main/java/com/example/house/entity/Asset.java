@@ -23,18 +23,23 @@ public class Asset implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int assetId;
 
+    @NotNull
     @Column(name = "area")
     private String area;
 
+    @NotNull
     @Column(name = "price")
     private int price;
 
+    @NotNull
     @Column(name = "availability")
     private String availability;
 
+    @NotNull
     @Column(name = "square_meter")
     private int squareMeter;
 
+    @NotNull
     @ManyToOne(optional = false)
     @JoinColumn(name = "person_id", referencedColumnName = "person_id", nullable = false)
     private Person personId;
